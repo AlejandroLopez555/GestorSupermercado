@@ -1,0 +1,137 @@
+﻿@model SistemaControlProductos.Models.Producto
+
+@{
+    ViewBag.Title = "Agregar Nuevo Producto";
+    ViewBag.Message = "Completa la información del nuevo producto";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4 class="card-title mb-0">
+                    <i class="fas fa-plus-circle me-2"></i>Agregar Nuevo Producto
+                </h4>
+            </div>
+            <div class="card-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <!--aqui tenemos la Informacion Basica -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0">
+                                        <i class="fas fa-info-circle me-2"></i>Información Básica
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group mb-3">
+                                        @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "form-label fw-bold" })
+                                        @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control", placeholder = "Ingresa el nombre del producto" } })
+                                        @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger small" })
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        @Html.LabelFor(model => model.CategoriaId, "Categoría", htmlAttributes: new { @class = "form-label fw-bold" })
+                                        @Html.DropDownList("CategoriaId", null, "-- Selecciona una categoría --", htmlAttributes: new { @class = "form-select" })
+                                        @Html.ValidationMessageFor(model => model.CategoriaId, "", new { @class = "text-danger small" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <!-- El precio y Stock -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0">
+                                        <i class="fas fa-chart-bar me-2"></i>Inventario y Precio
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group mb-3">
+                                        @Html.LabelFor(model => model.Precio, htmlAttributes: new { @class = "form-label fw-bold" })
+                                        <div class="input-group">
+                                            <span class="input-group-text">$</span>
+                                            @Html.EditorFor(model => model.Precio, new { htmlAttributes = new { @class = "form-control", placeholder = "0.00", step = "0.01" } })
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.Precio, "", new { @class = "text-danger small" })
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        @Html.LabelFor(model => model.Stock, htmlAttributes: new { @class = "form-label fw-bold" })
+                                        @Html.EditorFor(model => model.Stock, new { htmlAttributes = new { @class = "form-control", placeholder = "0", min = "0" } })
+                                        @Html.ValidationMessageFor(model => model.Stock, "", new { @class = "text-danger small" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--proveedor-->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0">
+                                <i class="fas fa-truck me-2"></i>Información del Proveedor
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group mb-3">
+                                        @Html.LabelFor(model => model.ProveedorId, "Proveedor", htmlAttributes: new { @class = "form-label fw-bold" })
+                                        @Html.DropDownList("ProveedorId", null, "-- Selecciona un proveedor --", htmlAttributes: new { @class = "form-select" })
+                                        @Html.ValidationMessageFor(model => model.ProveedorId, "", new { @class = "text-danger small" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Los Botones de Accion -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-1"></i> Volver a la Lista
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save me-1"></i> Guardar Producto
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script para mejorar la experiencia de nuestros usuarios-->
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Aqui Agregamos foco al primer campo
+            $('#Nombre').focus();
+
+            // Validacion en tiempo real para precio
+            $('#Precio').on('input', function () {
+                let value = parseFloat($(this).val());
+                if (value < 0.01) {
+                    $(this).addClass('is-invalid');
+                } else {
+                    $(this).removeClass('is-invalid');
+                }
+            });
+
+            // Validacion en tiempo real para stock
+            $('#Stock').on('input', function () {
+                let value = parseInt($(this).val());
+                if (value < 0) {
+                    $(this).addClass('is-invalid');
+                } else {
+                    $(this).removeClass('is-invalid');
+                }
+            });
+        });
+    </script>
+}

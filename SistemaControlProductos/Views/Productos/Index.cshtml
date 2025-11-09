@@ -1,0 +1,152 @@
+﻿@model IEnumerable<SistemaControlProductos.Models.Producto>
+
+@{
+    ViewBag.Title = "Gestión de Productos";
+    ViewBag.Message = "Administra todos los productos del inventario";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-boxes me-2"></i>Productos</h2>
+    <a href="@Url.Action("Create")" class="btn btn-success">
+        <i class="fas fa-plus-circle me-1"></i> Nuevo Producto
+    </a>
+</div>
+
+<!-- Tarjeta de Productos -->
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5 class="card-title mb-0">
+            <i class="fas fa-list me-1"></i> Lista de Productos
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th><i class="fas fa-tag me-1"></i>Producto</th>
+                        <th><i class="fas fa-layer-group me-1"></i>Categoría</th>
+                        <th><i class="fas fa-dollar-sign me-1"></i>Precio</th>
+                        <th><i class="fas fa-boxes me-1"></i>Stock</th>
+                        <th><i class="fas fa-truck me-1"></i>Proveedor</th>
+                        <th class="text-center"><i class="fas fa-cogs me-1"></i>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <strong>@Html.DisplayFor(modelItem => item.Nombre)</strong>
+                            </td>
+                            <td>
+                                <span class="badge bg-info">@Html.DisplayFor(modelItem => item.Categoria.Nombre)</span>
+                            </td>
+                            <td>
+                                <span class="fw-bold text-success">$@Html.DisplayFor(modelItem => item.Precio)</span>
+                            </td>
+                            <td>
+                                @if (item.Stock < 10)
+                                {
+                                    <span class="badge bg-danger">@Html.DisplayFor(modelItem => item.Stock)</span>
+                                }
+                                else if (item.Stock < 20)
+                                {
+                                    <span class="badge bg-warning">@Html.DisplayFor(modelItem => item.Stock)</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">@Html.DisplayFor(modelItem => item.Stock)</span>
+                                }
+                            </td>
+                            <td>
+                                <small>@Html.DisplayFor(modelItem => item.Proveedor.Nombre)</small>
+                            </td>
+                            <td class="table-actions text-center">
+                                <a href="@Url.Action("Edit", new { id = item.ProductoId })"
+                                   class="btn btn-warning btn-sm btn-action"
+                                   title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="@Url.Action("Details", new { id = item.ProductoId })"
+                                   class="btn btn-info btn-sm btn-action"
+                                   title="Detalles">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="@Url.Action("Delete", new { id = item.ProductoId })"
+                                   class="btn btn-danger btn-sm btn-action"
+                                   title="Eliminar">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Estadisticas Rapidas -->
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4>@Model.Count()</h4>
+                        <p>Total Productos</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-boxes fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4>@Model.Where(p => p.Stock > 20).Count()</h4>
+                        <p>Stock Alto</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-arrow-up fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4>@Model.Where(p => p.Stock <= 10).Count()</h4>
+                        <p>Stock Bajo</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-exclamation-triangle fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4>@Model.Select(p => p.CategoriaId).Distinct().Count()</h4>
+                        <p>Categorías</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-layer-group fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
